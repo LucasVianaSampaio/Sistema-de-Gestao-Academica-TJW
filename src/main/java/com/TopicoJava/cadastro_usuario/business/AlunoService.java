@@ -30,8 +30,13 @@ public class AlunoService {
     }
 
     public Aluno buscarPorId(Long id) {
-        return repository.findById(id)
+        Aluno aluno =  repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        if (!aluno.getAtivo()) {
+            throw new RuntimeException("Aluno inativo");
+        }
+        return aluno;
     }
 
     public void atualizarAlunoPorId(Long id, Aluno novoAluno) {
@@ -40,7 +45,7 @@ public class AlunoService {
 
         Aluno alunoAtualizado = Aluno.builder()
                 .id(alunoExistente.getId())
-                .matricula(alunoExistente.getMatricula()) // matrícula não pode mudar
+                .matricula(alunoExistente.getMatricula())
                 .email(novoAluno.getEmail() != null ? novoAluno.getEmail() : alunoExistente.getEmail())
                 .nome(novoAluno.getNome() != null ? novoAluno.getNome() : alunoExistente.getNome())
                 .dataNascimento(novoAluno.getDataNascimento() != null ? novoAluno.getDataNascimento() : alunoExistente.getDataNascimento())

@@ -20,8 +20,12 @@ public class TurmaService {
     }
 
     public Turma buscarPorCodigo(String codigo) {
-        return repository.findByCodigo(codigo)
+        Turma turma = repository.findByCodigo(codigo)
                 .orElseThrow(() -> new RuntimeException("Turma com código não encontrada"));
+        if (!turma.getAtivo()) {
+            throw new RuntimeException("Turma inexistente");
+        }
+        return turma;
     }
 
     public Turma buscarPorId(Long id) {
@@ -74,6 +78,6 @@ public class TurmaService {
     }
 
     public List<Turma> buscarTurmasComVagasDisponiveis() {
-        return repository.findByVagasOcupadasLessThan(Integer.MAX_VALUE); // ou setar a lógica desejada
+        return repository.findByVagasOcupadasLessThan(Integer.MAX_VALUE);
     }
 }
